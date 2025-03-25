@@ -16,10 +16,12 @@ namespace KpBinEditor.ViewModels
     internal class MainViewModel : ObservableRecipient
     {
         private readonly TextViewModel _textViewModel;
+        private readonly ResMeta _resMeta;
         
-        public MainViewModel(TextViewModel textViewModel)
+        public MainViewModel(TextViewModel textViewModel, ResMeta resMeta)
         {
             _textViewModel = textViewModel;
+            _resMeta = resMeta;
             while (string.IsNullOrEmpty(Settings.Default.ResMetaDrFile) || string.IsNullOrEmpty(Settings.Default.BinFilesDir))
             {
                 (new SettingsWindow()).ShowDialog();
@@ -27,22 +29,9 @@ namespace KpBinEditor.ViewModels
 
             _textViewModel.Init(Path.Combine(Settings.Default.BinFilesDir, "TextConfig.bin"));
 
-            var xml = new XmlDocument();
-            xml.Load(Settings.Default.ResMetaDrFile);
-            var nodes = xml.SelectNodes("/metalib/struct");
-            var structs = new Dictionary<string, string>();
-            if (nodes != null)
-            {
-                foreach (XmlNode node in nodes)
-                {
-                    var name = node.Attributes?["name"]?.Value;
-                    if (!string.IsNullOrEmpty(name))
-                    {
-                        var desc = node.Attributes?["desc"]?.Value ?? name;
-                        structs[name] = desc;
-                    }
-                }
-            }
+            resMeta.Init();
+
+            var structs = resMeta.Structs.ToDictionary(s => s.Name, s => s.Desc ?? s.Name);
 
             _files.Columns.Add(new DataColumn("name"));
             _files.Columns.Add(new DataColumn("desc"));
@@ -64,8 +53,18 @@ namespace KpBinEditor.ViewModels
         private readonly DataTable _files = new DataTable();
         public DataTable Files => _files;
 
+        private DataRowView? _selectedRow;
+
+        public DataRowView? SelectRow
+        {
+            get { return _selectedRow; }
+            set { SetProperty(ref _selectedRow, value); }
+        }
+
+
         public ICommand OpenTextWindowCommand => new RelayCommand(OpenTextWindow);
         public ICommand OpenSettingsWindowCommand => new RelayCommand(OpenSettingsWindow);
+        public ICommand OpenBinWindowCommand => new RelayCommand(OpenBinWindow);
 
         private void OpenTextWindow()
         {
@@ -75,6 +74,22 @@ namespace KpBinEditor.ViewModels
         private void OpenSettingsWindow()
         {
             new SettingsWindow().Show();
+        }
+
+        private void OpenBinWindow()
+        {
+            if (SelectRow == null)
+            {
+                return;
+            }
+
+            var binFile = SelectRow["name"]?.ToString();
+            if (string.IsNullOrEmpty(binFile))
+            {
+                return;
+            }
+            new BinWindow(binFile).Show();
+            
         }
     }
 }

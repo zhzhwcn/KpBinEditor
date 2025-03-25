@@ -15,11 +15,11 @@
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal">
             <Button Padding="10, 5" Margin="3" Command="{Binding OpenSettingsWindowCommand}">配置</Button>
-            <Button Padding="10, 5" Margin="3">打开</Button>
+            <Button Padding="10, 5" Margin="3" Command="{Binding OpenBinWindowCommand}">打开</Button>
             <Button Padding="10, 5" Margin="3">保存</Button>
             <Button Padding="10, 5" Margin="3" Command="{Binding OpenTextWindowCommand}">文本</Button>
         </StackPanel>
-        <DataGrid Grid.Row="1" ItemsSource="{Binding Files}" SelectionMode="Single" CanUserAddRows="False" IsReadOnly="True">
+        <DataGrid Grid.Row="1" ItemsSource="{Binding Files}" SelectionMode="Single" CanUserAddRows="False" IsReadOnly="True" SelectedItem="{Binding SelectRow}">
 
         </DataGrid>
     </Grid>

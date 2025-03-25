@@ -21,6 +21,8 @@ namespace KpBinEditor
             sc.AddSingleton<MainViewModel>();
             sc.AddSingleton<SettingsViewModel>();
             sc.AddSingleton<TextViewModel>();
+            sc.AddSingleton<ResMeta>();
+            sc.AddTransient<BinViewModel>();
             Ioc.Default.ConfigureServices(sc.BuildServiceProvider());
 
             
@@ -28,7 +30,7 @@ namespace KpBinEditor
 
         private void App_OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
-            MessageBox.Show(e.ToString());
+            MessageBox.Show(e.Exception.ToString());
             App.Current.Shutdown();
         }
     }
