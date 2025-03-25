@@ -1,0 +1,45 @@
+﻿<Window x:Class="KpBinEditor.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:KpBinEditor"
+        xmlns:vm="clr-namespace:KpBinEditor.ViewModels"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance vm:SettingsViewModel, IsDesignTimeCreatable=True}"
+        Title="配置" Height="450" Width="400" Closing="SettingsWindows_OnClosing">
+    <Grid Margin="0,10,0,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="120"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="80"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <Label Grid.Row="0" Grid.Column="0">服务端目录</Label>
+        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding ServerPath}"></TextBox>
+        <Button Grid.Row="0" Grid.Column="2" Command="{Binding SelectServerPathCommand }">浏览</Button>
+
+        <Label Grid.Row="1" Grid.Column="0">ResMeta.dr目录</Label>
+        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding ResMetaDrFile}"></TextBox>
+        <Button Grid.Row="1" Grid.Column="2" Command="{Binding SelectResMetaDrFileCommand }">浏览</Button>
+
+        <Label Grid.Row="2" Grid.Column="0">Bin目录</Label>
+        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding BinPath}"></TextBox>
+        <Button Grid.Row="2" Grid.Column="2" Command="{Binding SelectBinPathCommand }">浏览</Button>
+
+        <StackPanel Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Center">
+            <Button Margin="5" Padding="30, 3" Command="{Binding SaveCommand}">确定</Button>
+        </StackPanel>
+    </Grid>
+</Window>

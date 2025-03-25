@@ -1,0 +1,26 @@
+﻿<Window x:Class="KpBinEditor.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:KpBinEditor"
+        xmlns:vm="clr-namespace:KpBinEditor.ViewModels"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance vm:MainViewModel, IsDesignTimeCreatable=True}"
+        Title="向僵尸开炮Bin编辑器" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <Button Padding="10, 5" Margin="3" Command="{Binding OpenSettingsWindowCommand}">配置</Button>
+            <Button Padding="10, 5" Margin="3">打开</Button>
+            <Button Padding="10, 5" Margin="3">保存</Button>
+            <Button Padding="10, 5" Margin="3" Command="{Binding OpenTextWindowCommand}">文本</Button>
+        </StackPanel>
+        <DataGrid Grid.Row="1" ItemsSource="{Binding Files}" SelectionMode="Single" CanUserAddRows="False" IsReadOnly="True">
+
+        </DataGrid>
+    </Grid>
+</Window>
