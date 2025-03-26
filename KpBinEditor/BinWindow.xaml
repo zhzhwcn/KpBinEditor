@@ -4,16 +4,23 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KpBinEditor"
+        xmlns:behaviours="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:vm="clr-namespace:KpBinEditor.ViewModels"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance vm:BinViewModel, IsDesignTimeCreatable=True}"
-        Title="BinWindow" Height="450" Width="800">
+        Title="{Binding Title}" Height="450" Width="800">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition Width="200"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <DataGrid Grid.Column="0" ItemsSource="{Binding Data}"></DataGrid>
+        <DataGrid Grid.Column="0" Name="DataGrid" ItemsSource="{Binding Data}">
+            <behaviours:Interaction.Triggers>
+                <behaviours:EventTrigger EventName="AutoGeneratingColumn" SourceObject="{Binding ElementName=DataGrid}">
+                    <behaviours:InvokeCommandAction Command="{Binding AutoGeneratingColumnCommand}" PassEventArgsToCommand="True"/>
+                </behaviours:EventTrigger>
+            </behaviours:Interaction.Triggers>
+        </DataGrid>
         <StackPanel Grid.Column="1">
             <StackPanel Orientation="Horizontal">
                 <Button Padding="10,3" Margin="3">保存</Button>

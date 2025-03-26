@@ -10,6 +10,9 @@ using System.Windows;
 using KpBinEditor.Properties;
 using System.Buffers.Binary;
 using System.Reflection.PortableExecutable;
+using System.Windows.Controls;
+using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
 
 namespace KpBinEditor.ViewModels
 {
@@ -25,6 +28,18 @@ namespace KpBinEditor.ViewModels
         }
 
         public DataTable Data { get; } = new DataTable();
+        public ICommand AutoGeneratingColumnCommand => new RelayCommand<DataGridAutoGeneratingColumnEventArgs>(AutoGeneratingColumn);
+
+        private StructData? _structData;
+
+        private string _title = "Bin编辑";
+
+        public string Title
+        {
+            get { return _title; }
+            set { SetProperty(ref _title, value); }
+        }
+
 
         public void Init(string binFile)
         {
@@ -44,16 +59,16 @@ namespace KpBinEditor.ViewModels
                 return;
             }
 
-            var sd = _resMeta.Structs.FirstOrDefault(s => s.Name == name);
-            if (sd == null)
+            _structData = _resMeta.Structs.FirstOrDefault(s => s.Name == name);
+            if (_structData == null)
             {
                 MessageBox.Show($"未找到数据定义{binFile}");
                 return;
             }
 
-            AddColumns(sd.Entries, string.Empty);
+            Title = $"正在编辑 - {binFile}[{_structData.Desc}]";
 
-            
+            AddColumns(_structData.Entries, string.Empty);
 
             using var fs = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read);
             using var reader = new BinaryReader(fs);
@@ -61,7 +76,7 @@ namespace KpBinEditor.ViewModels
             while (fs.Position < fs.Length)
             {
                 var row = Data.NewRow();
-                ReadEntries(sd.Entries, row, reader, string.Empty);
+                ReadEntries(_structData.Entries, row, reader, string.Empty);
                 Data.Rows.Add(row);
             }
 
@@ -218,6 +233,20 @@ namespace KpBinEditor.ViewModels
                             }
                     }
                 }
+            }
+        }
+
+        private void AutoGeneratingColumn(DataGridAutoGeneratingColumnEventArgs? e)
+        {
+            if (e == null || _structData == null)
+            {
+                return;
+            }
+
+            var entry = _structData.Entries.FirstOrDefault(x => x.Name == e.Column.Header.ToString());
+            if (entry != null && !string.IsNullOrEmpty(entry.CName))
+            {
+                e.Column.Header = entry.CName;
             }
         }
     }
